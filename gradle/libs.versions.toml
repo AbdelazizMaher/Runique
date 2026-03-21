@@ -11,29 +11,29 @@ coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-activityCompose = "1.13.0"
+activityCompose = "1.12.4"
 ktor = "3.4.1"
 ktorClientLogging = "3.4.1"
 ktorServerCallLogging = "3.4.1"
 koin = "4.2.0"
 lifecycleRuntimeKtx = "2.10.0"
-composeBom = "2026.03.00"
+composeBom = "2024.09.00"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.7"
 securityCryptoKtx = "1.1.0"
 timber = "5.0.1"
-ksp = "1.9.22-1.0.17"
+ksp = "2.0.21-1.0.25"
 room = "2.8.4"
-appcompat = "1.7.1"
-material = "1.13.0"
-org-jetbrains-kotlin-jvm = "1.9.22"
-maps = "8.2.2"
+appcompat = "1.6.1"
+material = "1.10.0"
+org-jetbrains-kotlin-jvm = "2.0.21"
+maps = "6.4.0"
 coroutines = "1.10.2"
 gmsLocation = "21.3.0"
 mapsUtils = "6.0.1"
 bson = "5.6.4"
 work = "2.11.1"
-kotlinx-serialization = "1.10.0"
+kotlinx-serialization = "1.8.1"
 secretsPlugin = "2.0.1"
 playServicesMaps = "20.0.0"
 annotation = "1.9.1"
@@ -98,6 +98,13 @@ org-mongodb-bson = { module = "org.mongodb:bson", version.ref = "bson" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 google-maps-android-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "mapsUtils"}
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+
+# Gradle
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
