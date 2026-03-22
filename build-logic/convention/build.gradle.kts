@@ -14,15 +14,21 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("android-application") {
+        register("androidApplication") {
             id = "runique.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
     }
     plugins {
-        register("android-applicationCompose") {
+        register("androidApplicationCompose") {
             id = "runique.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+    }
+    plugins {
+        register("androidLibrary") {
+            id = "runique.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
     }
 }

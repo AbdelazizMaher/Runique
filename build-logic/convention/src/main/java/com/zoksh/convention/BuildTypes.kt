@@ -48,7 +48,7 @@ internal fun Project.configureBuildTypes(
 }
 
 private fun BuildType.configureDebugBuildType(apiKey: String) {
-    buildConfigField("String", "API_KEY", "$\"apiKey\"")
+    buildConfigField("String", "API_KEY", "\"$apiKey\"")
     buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
 }
 
@@ -56,7 +56,7 @@ private fun BuildType.configureReleaseBuildType(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
     apiKey: String
 ) {
-    buildConfigField("String", "API_KEY", "$\"apiKey\"")
+    buildConfigField("String", "API_KEY", "\"$apiKey\"")
     buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
 
     isMinifyEnabled = true
