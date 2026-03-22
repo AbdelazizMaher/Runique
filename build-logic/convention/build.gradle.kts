@@ -49,4 +49,10 @@ gradlePlugin {
             implementationClass = "AndroidRoomConventionPlugin"
         }
     }
+    plugins {
+        register("jvmLibrary") {
+            id = "runique.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
+    }
 }
