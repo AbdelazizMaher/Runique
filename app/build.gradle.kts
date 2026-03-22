@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.runique.android.application)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.runique.android.application.compose)
     alias(libs.plugins.mapsplatform.secrets.plugin)
 }
 
@@ -9,9 +8,6 @@ android {
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildFeatures {
-        compose = true
     }
 }
 

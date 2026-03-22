@@ -19,4 +19,10 @@ gradlePlugin {
             implementationClass = "AndroidApplicationConventionPlugin"
         }
     }
+    plugins {
+        register("android-applicationCompose") {
+            id = "runique.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+    }
 }
