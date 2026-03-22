@@ -37,4 +37,10 @@ gradlePlugin {
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
     }
+    plugins {
+        register("androidFeatureUi") {
+            id = "runique.android.feature.ui"
+            implementationClass = "AndroidFeatureUiConventionPlugin"
+        }
+    }
 }
