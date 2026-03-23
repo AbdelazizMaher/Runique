@@ -1,6 +1,7 @@
 package com.zoksh.core.data.networking
 
 import com.zoksh.core.data.BuildConfig
+import com.zoksh.core.domain.util.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -8,6 +9,8 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import com.zoksh.core.domain.util.Result
+import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
@@ -56,7 +59,7 @@ suspend inline fun <reified Request, reified Response: Any> HttpClient.post(
 
 
 
-suspend inline fun <reified T> safeCall(execute: () -> HttpResponse): Result<T, DataError.Network) {
+suspend inline fun <reified T> safeCall(execute: () -> HttpResponse): Result<T, DataError.Network> {
     val response = try {
         execute()
     } catch (e: UnresolvedAddressException) {
