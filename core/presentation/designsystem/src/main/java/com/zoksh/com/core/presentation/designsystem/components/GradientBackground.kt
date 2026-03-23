@@ -15,7 +15,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zoksh.com.core.presentation.designsystem.RuniqueTheme
 
 @Composable
 fun GradientBackground(
@@ -75,6 +77,18 @@ fun GradientBackground(
                 ),
         ) {
             content()
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun GradientBackgroundPreview() {
+    RuniqueTheme {
+        GradientBackground(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
         }
     }
 }
