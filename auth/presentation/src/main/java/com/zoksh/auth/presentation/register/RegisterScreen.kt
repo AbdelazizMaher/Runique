@@ -44,17 +44,19 @@ import com.zoksh.com.core.presentation.designsystem.components.RuniqueTextField
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterScreenRot(
+fun RegisterScreenRoot(
+    onSignInClicked: () -> Unit,
+    onSuccessfulRegistration: () -> Unit,
     viewModel: RegisterViewModel = koinViewModel()
 ) {
-    RegisterScreenRotScreen(
+    RegisterScreenRootScreen(
         state = viewModel.state,
         onAction = viewModel::onAction
     )
 }
 
 @Composable
-private fun RegisterScreenRotScreen(
+private fun RegisterScreenRootScreen(
     state: RegisterState,
     onAction: (RegisterAction) -> Unit
 ) {
@@ -220,7 +222,7 @@ private fun PasswordRequirement(
 @Composable
 private fun RegisterScreenRotScreenPreview() {
     RuniqueTheme {
-        RegisterScreenRotScreen(
+        RegisterScreenRootScreen(
             state = RegisterState(
                 passwordValidationState = PasswordValidationState(
                     hasNumber = true,
