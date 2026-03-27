@@ -1,9 +1,12 @@
 package com.zoksh.auth.data.di
 
+import com.zoksh.auth.data.AuthRepositoryImpl
 import com.zoksh.auth.data.EmailPatternValidator
+import com.zoksh.auth.domain.AuthRepository
 import com.zoksh.auth.domain.PatternValidator
 import com.zoksh.auth.domain.UserDataValidator
 import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val authDataModule = module {
@@ -11,4 +14,5 @@ val authDataModule = module {
         EmailPatternValidator
     }
     singleOf(::UserDataValidator)
+    singleOf(::AuthRepositoryImpl).bind<AuthRepository>()
 }
