@@ -25,7 +25,7 @@ import com.zoksh.com.core.presentation.designsystem.components.RuniqueActionButt
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueOutlinedActionButton
 
 @Composable
-fun IntroScreenRoute(
+fun IntroScreenRoot(
     onSignUpClicked: () -> Unit,
     onSignInClicked: () -> Unit,
 ) {
