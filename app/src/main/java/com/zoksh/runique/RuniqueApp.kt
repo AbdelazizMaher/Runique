@@ -4,7 +4,7 @@ import android.app.Application
 import com.zoksh.auth.data.di.authDataModule
 import com.zoksh.auth.presentation.di.authViewModelModule
 import com.zoksh.core.data.di.coreDataModule
-import com.zoksh.run.presentation.run_overview.di.runViewModelModule
+import com.zoksh.run.presentation.di.runViewModelModule
 import com.zoksh.runique.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
