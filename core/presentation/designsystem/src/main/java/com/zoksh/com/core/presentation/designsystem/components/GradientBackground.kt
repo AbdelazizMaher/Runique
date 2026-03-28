@@ -47,7 +47,7 @@ fun GradientBackground(
             .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .then(
                     if (isAtLeastAndroid12) {
@@ -57,14 +57,18 @@ fun GradientBackground(
                 .background(
                     brush = Brush.radialGradient(
                         colors = listOf(
-                            if (isAtLeastAndroid12) primaryColor else primaryColor.copy(alpha = 0.3f),
+                            if (isAtLeastAndroid12) primaryColor else primaryColor.copy(alpha = 0.4f),
                             MaterialTheme.colorScheme.background
                         ),
                         center = Offset(
                             x = screenWidthPx / 2f,
                             y = -100f
                         ),
-                        radius = smallDimensionPx / 2f
+                        radius = if (isAtLeastAndroid12) {
+                            smallDimensionPx / 2f
+                        } else {
+                            smallDimensionPx.toFloat()
+                        }
                     )
                 )
         )
