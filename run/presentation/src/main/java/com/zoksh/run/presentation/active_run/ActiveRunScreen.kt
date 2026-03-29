@@ -2,9 +2,11 @@
 
 package com.zoksh.run.presentation.active_run
 
+import android.content.Context
 import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,11 +24,15 @@ import androidx.compose.ui.unit.dp
 import com.zoksh.com.core.presentation.designsystem.RuniqueTheme
 import com.zoksh.com.core.presentation.designsystem.StartIcon
 import com.zoksh.com.core.presentation.designsystem.StopIcon
+import com.zoksh.com.core.presentation.designsystem.components.RuniqueDialog
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueFloatingActionButton
+import com.zoksh.com.core.presentation.designsystem.components.RuniqueOutlinedActionButton
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueScaffold
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueToolbar
 import com.zoksh.run.presentation.R
 import com.zoksh.run.presentation.active_run.components.RunDataCard
+import com.zoksh.run.presentation.util.hasLocationPermission
+import com.zoksh.run.presentation.util.hasNotificationPermission
 import com.zoksh.run.presentation.util.shouldShowLocationPermissionRationale
 import com.zoksh.run.presentation.util.shouldShowNotificationPermissionRationale
 import org.koin.androidx.compose.koinViewModel
@@ -117,6 +123,53 @@ private fun ActiveRunScreen(
                     .fillMaxWidth()
             )
         }
+    }
+
+    if (state.showLocationRationale || state.showNotificationRationale) {
+        RuniqueDialog(
+            title = stringResource(id = R.string.permission_required),
+            onDismiss = {
+
+            },
+            description = when {
+                state.showNotificationRationale && state.showLocationRationale -> stringResource(id = R.string.location_notification_rationale)
+                state.showLocationRationale -> stringResource(id = R.string.location_rationale)
+                else -> stringResource(id = R.string.notification_rationale)
+            },
+            primaryButton = {
+                RuniqueOutlinedActionButton(
+                    text = stringResource(id = R.string.okay),
+                    isLoading = false,
+                    onClick = {
+                        onAction(ActiveRunAction.DismissRationaleDialog)
+                        permissionLauncher.requestRuniquePermissions(context)
+                    }
+                )
+            }
+        )
+    }
+}
+
+private fun ActivityResultLauncher<Array<String>>.requestRuniquePermissions(
+    context: Context
+) {
+    val hasLocationPermission = context.hasLocationPermission()
+    val hasNotificationPermission = context.hasNotificationPermission()
+
+    val locationPermissions = arrayOf(
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
+    val notificationPermission = if (Build.VERSION.SDK_INT >= 33) {
+        arrayOf(android.Manifest.permission.POST_NOTIFICATIONS)
+    } else arrayOf()
+
+    when {
+        !hasLocationPermission && !hasNotificationPermission -> {
+            launch(locationPermissions + notificationPermission)
+        }
+        !hasLocationPermission -> launch(locationPermissions)
+        !hasNotificationPermission -> launch(notificationPermission)
     }
 }
 
