@@ -25,16 +25,6 @@ class AndroidLocationObserver(
 
     override fun observeLocation(interval: Long): Flow<LocationWithAltitude> {
         return callbackFlow {
-            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            var isGpsEnabled = false
-            var isNetworkEnabled = false
-            while (!isGpsEnabled && !isNetworkEnabled) {
-                isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-                if (!isGpsEnabled && !isNetworkEnabled) {
-                    delay(3000L)
-                }
-            }
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -44,30 +34,40 @@ class AndroidLocationObserver(
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 close()
-            } else {
-                client.lastLocation.addOnSuccessListener {
-                    it?.let { location ->
+                return@callbackFlow
+            }
+
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            while (true) {
+                val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                
+                if (isGpsEnabled || isNetworkEnabled) break
+                
+                delay(3000L)
+            }
+
+            client.lastLocation.addOnSuccessListener {
+                it?.let { location ->
+                    trySend(location.toLocationWithAltitude())
+                }
+            }
+
+            val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, interval).build()
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    super.onLocationResult(result)
+                    result.locations.lastOrNull()?.let { location ->
                         trySend(location.toLocationWithAltitude())
                     }
                 }
+            }
 
-                val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, interval).build()
-                val locationCallback = object : LocationCallback() {
-                    override fun onLocationResult(result: LocationResult) {
-                        super.onLocationResult(result)
-                        result.locations.lastOrNull()?.let { location ->
-                            trySend(location.toLocationWithAltitude())
-                        }
-                    }
-                }
+            client.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
 
-                client.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
-
-                awaitClose {
-                    client.removeLocationUpdates(locationCallback)
-                }
+            awaitClose {
+                client.removeLocationUpdates(locationCallback)
             }
         }
     }
-
 }
