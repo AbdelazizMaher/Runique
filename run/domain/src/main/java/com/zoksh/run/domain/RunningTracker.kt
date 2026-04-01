@@ -11,17 +11,18 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 
 class RunningTracker(
-    private val locationObserver: LocationObserver, private val applicationScope: CoroutineScope
+    private val locationObserver: LocationObserver,
+    private val applicationScope: CoroutineScope
 ) {
     private val isObservingLocation = MutableStateFlow(false)
 
     val currentLocation = isObservingLocation.flatMapLatest { isObserving ->
-            if (isObserving) {
-                locationObserver.observeLocation(1000L)
-            } else flowOf()
-        }.stateIn(
-            applicationScope, SharingStarted.Lazily, null
-        )
+        if (isObserving) {
+            locationObserver.observeLocation(1000L)
+        } else flowOf()
+    }.stateIn(
+        applicationScope, SharingStarted.Lazily, null
+    )
 
     fun startObserving() {
         isObservingLocation.value = true
