@@ -27,9 +27,9 @@ class ActiveRunViewModel(
     init {
         _hasLocationPermission.onEach { hasPermission ->
             if (hasPermission) {
-                runningTracker.stopObserving()
-            } else {
                 runningTracker.startObserving()
+            } else {
+                runningTracker.stopObserving()
             }
         }.launchIn(viewModelScope)
 
