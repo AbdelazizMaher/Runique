@@ -3,7 +3,8 @@ package com.zoksh.core.domain
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 object Timer {
     fun timeAndEmit(): Flow<Duration> {
@@ -12,7 +13,8 @@ object Timer {
             while (true) {
                 delay(200L)
                 val currentTime = System.currentTimeMillis()
-                emit(Duration.ofMillis(currentTime - lastEmittedTime))
+                val elapsedTime = currentTime - lastEmittedTime
+                emit(elapsedTime.milliseconds)
                 lastEmittedTime = currentTime
             }
         }
