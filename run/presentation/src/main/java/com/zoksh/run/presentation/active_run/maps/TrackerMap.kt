@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
@@ -26,6 +27,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.zoksh.com.core.presentation.designsystem.RunIcon
 import com.zoksh.core.domain.location.Location
@@ -46,7 +48,7 @@ fun TrackerMap(
         MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
     }
     val cameraPositionState = rememberCameraPositionState()
-    val markerState = rememberUpdatedMarkerState()
+    val markerState = rememberMarkerState()
 
     val markerPositionLat by animateFloatAsState(
         targetValue = currentLocation?.lat?.toFloat() ?: 0f,
@@ -70,6 +72,7 @@ fun TrackerMap(
     LaunchedEffect(currentLocation, isRunFinished) {
         if (currentLocation != null && !isRunFinished) {
             val latLng = LatLng(currentLocation.lat, currentLocation.lng)
+            MapsInitializer.initialize(context)
             cameraPositionState.animate(
                 update = CameraUpdateFactory.newLatLngZoom(latLng, 17f)
             )
@@ -88,7 +91,6 @@ fun TrackerMap(
     ) {
         if (!isRunFinished && currentLocation != null) {
             MarkerComposable(
-                currentLocation,
                 state = markerState,
             ) {
                 Box(
