@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.zoksh.com.core.presentation.designsystem.RuniqueTheme
 import com.zoksh.com.core.presentation.designsystem.StartIcon
 import com.zoksh.com.core.presentation.designsystem.StopIcon
+import com.zoksh.com.core.presentation.designsystem.components.RuniqueActionButton
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueDialog
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueFloatingActionButton
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueOutlinedActionButton
@@ -32,6 +33,7 @@ import com.zoksh.com.core.presentation.designsystem.components.RuniqueScaffold
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueToolbar
 import com.zoksh.run.presentation.R
 import com.zoksh.run.presentation.active_run.components.RunDataCard
+import com.zoksh.run.presentation.active_run.maps.TrackerMap
 import com.zoksh.run.presentation.util.hasLocationPermission
 import com.zoksh.run.presentation.util.hasNotificationPermission
 import com.zoksh.run.presentation.util.shouldShowLocationPermissionRationale
@@ -136,6 +138,14 @@ private fun ActiveRunScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
+            TrackerMap(
+                isRunFinished = state.isRunFinished,
+                currentLocation = state.currentLocation,
+                locations = state.runData.locations,
+                onSnapShot = {},
+                modifier = Modifier
+                    .fillMaxSize()
+            )
             RunDataCard(
                 elapsedTime = state.elapsedTime,
                 runData = state.runData,
@@ -145,6 +155,36 @@ private fun ActiveRunScreen(
                     .fillMaxWidth()
             )
         }
+    }
+
+    if (!state.shouldTrack && state.hasStartedRunning) {
+        RuniqueDialog(
+            title = stringResource(id = R.string.running_is_paused),
+            onDismiss = {
+                onAction(ActiveRunAction.OnResumeRunClicked)
+            },
+            description = stringResource(id = R.string.resume_or_finish_run),
+            primaryButton = {
+                RuniqueActionButton(
+                    text = stringResource(id = R.string.resume),
+                    isLoading = false,
+                    onClick = {
+                        onAction(ActiveRunAction.OnResumeRunClicked)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            },
+            secondaryButton = {
+                RuniqueOutlinedActionButton(
+                    text = stringResource(id = R.string.finish),
+                    isLoading = false,
+                    onClick = {
+                        onAction(ActiveRunAction.OnFinishRunClicked)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        )
     }
 
     if (state.showLocationRationale || state.showNotificationRationale) {

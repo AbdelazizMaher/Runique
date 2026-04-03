@@ -74,7 +74,7 @@ class ActiveRunViewModel(
             }
 
             ActiveRunAction.OnResumeRunClicked -> {
-                state = state.copy(shouldTrack = false)
+                state = state.copy(shouldTrack = true)
             }
 
             ActiveRunAction.OnBackClicked -> {
