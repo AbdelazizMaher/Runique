@@ -12,7 +12,10 @@ object PolylineColorCalculator {
         val distanceMeters = location1.location.location.distanceTo(location2.location.location)
         val timeDifference =
             abs((location2.durationTimestamp - location1.durationTimestamp).inWholeMilliseconds)
-        val speedKm = (distanceMeters / timeDifference) * 3.6
+        
+        val speedKm = if (timeDifference > 0) {
+            (distanceMeters / timeDifference) * 3600.0
+        } else 0.0
 
         return interpolateColor(
             speedKm = speedKm,

@@ -175,7 +175,7 @@ private fun ActiveRunScreen(
                 )
             },
             secondaryButton = {
-                RuniqueActionButton(
+                RuniqueOutlinedActionButton(
                     text = stringResource(id = R.string.finish),
                     isLoading = false,
                     onClick = {
