@@ -4,6 +4,7 @@ import android.app.Application
 import com.zoksh.auth.data.di.authDataModule
 import com.zoksh.auth.presentation.di.authViewModelModule
 import com.zoksh.core.data.di.coreDataModule
+import com.zoksh.core.database.di.databaseModule
 import com.zoksh.run.location.di.locationModule
 import com.zoksh.run.presentation.di.runPresentationModule
 import com.zoksh.runique.di.appModule
@@ -34,6 +35,7 @@ class RuniqueApp: Application() {
                 runPresentationModule,
                 coreDataModule,
                 locationModule,
+                databaseModule,
                 appModule
             )
         }
