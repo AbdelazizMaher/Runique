@@ -24,7 +24,7 @@ class RoomLocalRunDataSource(
     override suspend fun upsertRun(run: Run): Result<RunId, DataError.Local> {
         return try {
             val entity = run.toRunEntity()
-                runDao.upsertRun(entity)
+            runDao.upsertRun(entity)
             Result.Success(entity.id)
         } catch (e: SQLiteFullException) {
             Result.Error(DataError.Local.DISK_FULL)
