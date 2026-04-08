@@ -125,7 +125,7 @@ fun TrackerMap(
     ) {
         RuniquePolylines(locations = locations)
 
-        MapEffect(locations, isRunFinished, triggerCapture, createSnapshotJob) { map ->
+        MapEffect(isRunFinished, triggerCapture) { map ->
             if(isRunFinished && triggerCapture && createSnapshotJob == null) {
                 triggerCapture = false
 
