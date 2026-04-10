@@ -9,7 +9,7 @@ data class RunPendingSyncEntity(
     @Embedded val run: RunEntity,
     @PrimaryKey(autoGenerate = false)
     val runId: String = run.id,
-    val mapPicture: ByteArray,
+    val mapPictureBytes: ByteArray,
     val userId: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -20,7 +20,7 @@ data class RunPendingSyncEntity(
 
         if (run != other.run) return false
         if (runId != other.runId) return false
-        if (!mapPicture.contentEquals(other.mapPicture)) return false
+        if (!mapPictureBytes.contentEquals(other.mapPictureBytes)) return false
         if (userId != other.userId) return false
 
         return true
@@ -29,7 +29,7 @@ data class RunPendingSyncEntity(
     override fun hashCode(): Int {
         var result = run.hashCode()
         result = 31 * result + runId.hashCode()
-        result = 31 * result + mapPicture.contentHashCode()
+        result = 31 * result + mapPictureBytes.contentHashCode()
         result = 31 * result + userId.hashCode()
         return result
     }

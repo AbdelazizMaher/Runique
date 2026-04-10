@@ -23,7 +23,7 @@ class CreateRunWorker(
             runPendingSyncDao.getRunPendingSyncEntity(pendingRunId) ?: return Result.failure()
 
         val run = pendingEntity.run.toRun()
-        return when (val result = remoteRunDataSource.postRun(run, pendingEntity.mapPicture)) {
+        return when (val result = remoteRunDataSource.postRun(run, pendingEntity.mapPictureBytes)) {
             is com.zoksh.core.domain.util.Result.Error -> {
                 result.error.toWorkerResult()
             }

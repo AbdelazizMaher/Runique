@@ -95,7 +95,7 @@ class OfflineFirstRunRepository(
             val createdJobs = createdRuns.await().map {
                 launch {
                     val runEntity = it.run.toRun()
-                    when (remoteDataSource.postRun(runEntity, it.mapPicture)) {
+                    when (remoteDataSource.postRun(runEntity, it.mapPictureBytes)) {
                         is Result.Error -> Unit
                         is Result.Success -> {
                             applicationScope.launch {
