@@ -7,6 +7,7 @@ import com.zoksh.core.domain.run.LocalRunDataSource
 import com.zoksh.core.domain.run.RemoteRunDataSource
 import com.zoksh.core.domain.run.Run
 import com.zoksh.core.domain.run.RunRepository
+import com.zoksh.core.domain.run.SyncRunScheduler
 import com.zoksh.core.domain.util.DataError
 import com.zoksh.core.domain.util.EmptyResult
 import com.zoksh.core.domain.util.Result
@@ -24,6 +25,7 @@ class OfflineFirstRunRepository(
     private val remoteDataSource: RemoteRunDataSource,
     private val sessionStorage: SessionStorage,
     private val runPendingSyncDao: RunPendingSyncDao,
+    private val syncRunScheduler: SyncRunScheduler,
     private val applicationScope: CoroutineScope
 ) : RunRepository {
     override fun getRuns(): Flow<List<Run>> {
@@ -56,6 +58,11 @@ class OfflineFirstRunRepository(
         val runWithId = run.copy(id = localResult.data)
         return when (val remoteResult = remoteDataSource.postRun(runWithId, mapPicture)) {
             is Result.Error -> {
+                applicationScope.launch {
+                    syncRunScheduler.scheduleSync(
+                        SyncRunScheduler.SyncType.CreateRun(run, mapPicture)
+                    )
+                }.join()
                 Result.Success(Unit)
             }
 
@@ -76,9 +83,17 @@ class OfflineFirstRunRepository(
             return
         }
 
-        applicationScope.async {
+        val remoteResult = applicationScope.async {
             remoteDataSource.deleteRun(id)
         }.await()
+
+        if (remoteResult is Result.Error) {
+            applicationScope.launch {
+                syncRunScheduler.scheduleSync(
+                    SyncRunScheduler.SyncType.DeleteRun(id)
+                )
+            }.join()
+        }
     }
 
     override suspend fun syncPendingRuns() {
