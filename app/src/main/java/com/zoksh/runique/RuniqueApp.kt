@@ -5,6 +5,7 @@ import com.zoksh.auth.data.di.authDataModule
 import com.zoksh.auth.presentation.di.authViewModelModule
 import com.zoksh.core.data.di.coreDataModule
 import com.zoksh.core.database.di.databaseModule
+import com.zoksh.run.data.di.runDataModule
 import com.zoksh.run.location.di.locationModule
 import com.zoksh.run.network.di.networkModule
 import com.zoksh.run.presentation.di.runPresentationModule
@@ -13,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
@@ -30,10 +32,12 @@ class RuniqueApp: Application() {
         startKoin {
             androidLogger()
             androidContext(this@RuniqueApp)
+            workManagerFactory()
             modules(
                 authDataModule,
                 authViewModelModule,
                 runPresentationModule,
+                runDataModule,
                 coreDataModule,
                 locationModule,
                 databaseModule,

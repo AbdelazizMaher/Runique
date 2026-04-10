@@ -1,6 +1,6 @@
 package com.zoksh.core.domain.util
 
-interface DataError : Error {
+sealed interface DataError : Error {
     enum class Network : DataError {
         REQUEST_TIMEOUT,
         UNAUTHORIZED,
