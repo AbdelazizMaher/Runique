@@ -1,5 +1,6 @@
 package com.zoksh.core.data.run
 
+import com.zoksh.core.data.networking.get
 import com.zoksh.core.database.dao.RunPendingSyncDao
 import com.zoksh.core.database.mappers.toRun
 import com.zoksh.core.domain.SessionStorage
@@ -12,6 +13,9 @@ import com.zoksh.core.domain.util.DataError
 import com.zoksh.core.domain.util.EmptyResult
 import com.zoksh.core.domain.util.Result
 import com.zoksh.core.domain.util.asEmptyResult
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.authProviders
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -26,6 +30,7 @@ class OfflineFirstRunRepository(
     private val sessionStorage: SessionStorage,
     private val runPendingSyncDao: RunPendingSyncDao,
     private val syncRunScheduler: SyncRunScheduler,
+    private val client: HttpClient,
     private val applicationScope: CoroutineScope
 ) : RunRepository {
     override fun getRuns(): Flow<List<Run>> {
@@ -136,5 +141,21 @@ class OfflineFirstRunRepository(
             createdJobs.joinAll()
             deletedJobs.joinAll()
         }
+    }
+
+    override suspend fun deleteAllRuns() {
+        localDataSource.deleteAllRuns()
+    }
+
+    override suspend fun logout(): EmptyResult<DataError.Network> {
+        val result = client.get<Unit>(
+            route = "/logout"
+        ).asEmptyResult()
+
+        client.authProviders
+            .filterIsInstance<BearerAuthProvider>()
+            .forEach { it.clearToken() }
+
+        return result
     }
 }
