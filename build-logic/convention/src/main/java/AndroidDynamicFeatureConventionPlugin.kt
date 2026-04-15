@@ -1,11 +1,9 @@
-import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.DynamicFeatureExtension
 import com.zoksh.convention.ExtensionType
 import com.zoksh.convention.addUiLayerDependencies
 import com.zoksh.convention.configureAndroidCompose
 import com.zoksh.convention.configureBuildTypes
 import com.zoksh.convention.configureKotlinAndroid
-import com.zoksh.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -19,6 +17,7 @@ class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
             pluginManager.run {
                 apply("com.android.dynamic-feature")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jetbrains.kotlin.plugin.compose")
             }
 
             extensions.configure<DynamicFeatureExtension> {
