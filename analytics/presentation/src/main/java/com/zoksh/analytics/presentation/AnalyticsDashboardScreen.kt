@@ -30,7 +30,7 @@ fun AnalyticsDashboardScreenRoot(
     onBackClicked: () -> Unit,
     viewModel: AnalyticsDashboardViewModel = koinViewModel()
 ) {
-    AnalyticsDashboardScreenRootScreen(
+    AnalyticsDashboardScreen(
         state = viewModel.state,
         onAction = { action ->
             when (action) {
@@ -41,7 +41,7 @@ fun AnalyticsDashboardScreenRoot(
 }
 
 @Composable
-private fun AnalyticsDashboardScreenRootScreen(
+private fun AnalyticsDashboardScreen(
     state: AnalyticsDashboardState?,
     onAction: (AnalyticsAction) -> Unit
 ) {
@@ -126,7 +126,7 @@ private fun AnalyticsDashboardScreenRootScreen(
 @Composable
 private fun AnalyticsDashboardScreenRootScreenPreview() {
     RuniqueTheme {
-        AnalyticsDashboardScreenRootScreen(
+        AnalyticsDashboardScreen(
             state = AnalyticsDashboardState(
                 totalDistanceRun = "0.2 km",
                 totalTimeRun = "0d 0h 0m",
