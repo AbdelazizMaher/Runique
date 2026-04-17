@@ -1,6 +1,8 @@
 package com.zoksh.runique
 
 import android.app.Application
+import android.content.Context
+import com.google.android.play.core.splitcompat.SplitCompat
 import com.zoksh.auth.data.di.authDataModule
 import com.zoksh.auth.presentation.di.authViewModelModule
 import com.zoksh.core.data.di.coreDataModule
@@ -45,5 +47,10 @@ class RuniqueApp: Application() {
                 appModule
             )
         }
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        SplitCompat.install(this)
     }
 }
