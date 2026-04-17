@@ -2,6 +2,7 @@ package com.zoksh.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.zoksh.core.database.dao.AnalyticsDao
 import com.zoksh.core.database.dao.RunDao
 import com.zoksh.core.database.dao.RunPendingSyncDao
 import com.zoksh.core.database.entity.DeletedRunSyncEntity
@@ -19,4 +20,5 @@ import com.zoksh.core.database.entity.RunPendingSyncEntity
 abstract class RunDatabase : RoomDatabase() {
     abstract val dao: RunDao
     abstract val runPendingSyncDao: RunPendingSyncDao
+    abstract val analyticsDao: AnalyticsDao
 }

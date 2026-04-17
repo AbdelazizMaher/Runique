@@ -32,7 +32,11 @@ class MainActivity : ComponentActivity() {
                 ) {
                     if (!viewModel.state.isCheckingAuth) {
                         val navController = rememberNavController()
-                        NavigationRoot(navController = navController, viewModel.state.isLoggedIn)
+                        NavigationRoot(
+                            navController = navController,
+                            viewModel.state.isLoggedIn,
+                            onAnalyticsClicked = {}
+                        )
                     }
                 }
             }

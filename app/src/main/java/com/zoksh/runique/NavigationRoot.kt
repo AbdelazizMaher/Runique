@@ -20,6 +20,7 @@ import com.zoksh.run.presentation.run_overview.RunOverviewScreenRoot
 fun NavigationRoot(
     navController: NavHostController,
     isLoggedIn: Boolean,
+    onAnalyticsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -28,7 +29,7 @@ fun NavigationRoot(
         modifier = modifier
     ) {
         authGraph(navController)
-        runGraph(navController)
+        runGraph(navController, onAnalyticsClicked)
     }
 }
 
@@ -88,7 +89,10 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.runGraph(navController: NavHostController) {
+private fun NavGraphBuilder.runGraph(
+    navController: NavHostController,
+    onAnalyticsClicked: () -> Unit
+) {
     navigation(
         startDestination = "run_overview",
         route = "run"
@@ -98,6 +102,7 @@ private fun NavGraphBuilder.runGraph(navController: NavHostController) {
                 onStartRunClicked = {
                     navController.navigate("active_run")
                 },
+                onAnalyticsClicked = onAnalyticsClicked,
                 onLogoutClicked = {
                     navController.navigate("auth") {
                         popUpTo("run") {
