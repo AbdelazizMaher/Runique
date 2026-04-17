@@ -35,6 +35,8 @@ dependencies {
     // Koin
     implementation(libs.bundles.koin)
 
+    api(libs.core)
+
     // Crypto
     implementation(libs.androidx.security.crypto.ktx)
 
