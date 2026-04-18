@@ -2,6 +2,7 @@
 
 package com.zoksh.analytics.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,20 +10,34 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zoksh.analytics.presentation.components.AnalyticsCard
+import com.zoksh.analytics.presentation.components.LineChart
 import com.zoksh.com.core.presentation.designsystem.RuniqueTheme
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueScaffold
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueToolbar
+import com.zoksh.com.core.presentation.designsystem.ArrowRightIcon
+import com.zoksh.com.core.presentation.designsystem.KeyboardArrowDownIcon
+import androidx.compose.material3.Icon
+import java.time.ZonedDateTime
+import com.zoksh.analytics.domain.AnalyticsHistoryPoint
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -35,6 +50,7 @@ fun AnalyticsDashboardScreenRoot(
         onAction = { action ->
             when (action) {
                 AnalyticsAction.OnBackClicked -> onBackClicked()
+                else -> viewModel.onAction(action)
             }
         }
     )
@@ -42,7 +58,7 @@ fun AnalyticsDashboardScreenRoot(
 
 @Composable
 private fun AnalyticsDashboardScreen(
-    state: AnalyticsDashboardState?,
+    state: AnalyticsDashboardState,
     onAction: (AnalyticsAction) -> Unit
 ) {
     RuniqueScaffold(
@@ -56,7 +72,7 @@ private fun AnalyticsDashboardScreen(
             )
         }
     ) { paddingValues ->
-        if (state == null) {
+        if (state.totalDistanceRun.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -69,13 +85,13 @@ private fun AnalyticsDashboardScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     AnalyticsCard(
                         title = stringResource(id = R.string.total_distance_run),
@@ -90,9 +106,7 @@ private fun AnalyticsDashboardScreen(
                     )
                 }
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     AnalyticsCard(
                         title = stringResource(id = R.string.fastest_ever_run),
@@ -106,18 +120,102 @@ private fun AnalyticsDashboardScreen(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    AnalyticsCard(
-                        title = stringResource(id = R.string.avg_pace_per_run),
-                        value = state.avgPace,
-                        modifier = Modifier.weight(1f)
+                AnalyticsCard(
+                    title = stringResource(id = R.string.avg_pace_per_run),
+                    value = state.avgPace,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                if (state.history.isNotEmpty()) {
+                    ChartCard(
+                        title = stringResource(id = R.string.avg_distance_over_time),
+                        chart = {
+                            LineChart(
+                                dataPoints = state.history,
+                                valueSelector = { it.distanceMeters / 1000.0 },
+                                selectedPointIndex = state.selectedDistanceIndex,
+                                onPointClick = { index ->
+                                    onAction(AnalyticsAction.OnDistancePointSelected(index))
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp)
+                            )
+                        }
+                    )
+                    ChartCard(
+                        title = stringResource(id = R.string.avg_pace_over_time),
+                        chart = {
+                            LineChart(
+                                dataPoints = state.history,
+                                valueSelector = { it.paceMinPerKm },
+                                selectedPointIndex = state.selectedPaceIndex,
+                                onPointClick = { index ->
+                                    onAction(AnalyticsAction.OnPacePointSelected(index))
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp)
+                            )
+                        }
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ChartCard(
+    title: String,
+    chart: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(15.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(vertical = 16.dp), // Removed horizontal padding here
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Add horizontal padding back to header
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 16.sp
+            )
+            Icon(
+                imageVector = ArrowRightIcon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        
+        chart()
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Add horizontal padding back to footer
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Feb 2024",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp
+            )
+            Icon(
+                imageVector = KeyboardArrowDownIcon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -128,11 +226,18 @@ private fun AnalyticsDashboardScreenRootScreenPreview() {
     RuniqueTheme {
         AnalyticsDashboardScreen(
             state = AnalyticsDashboardState(
-                totalDistanceRun = "0.2 km",
-                totalTimeRun = "0d 0h 0m",
-                fastestEverRun = "143.9 km/h",
-                avgDistance = "0.1 km",
-                avgPace = "07:10"
+                totalDistanceRun = "1532 km",
+                totalTimeRun = "3d 12h 54min",
+                fastestEverRun = "25 km/h",
+                avgDistance = "6.6 km",
+                avgPace = "07:10",
+                history = List(15) { i ->
+                    AnalyticsHistoryPoint(
+                        dateTimeUtc = ZonedDateTime.now().plusDays(i.toLong()),
+                        distanceMeters = (4000 + (Math.sin(i.toDouble()) * 2000)).toInt(),
+                        paceMinPerKm = 5.0 + (Math.cos(i.toDouble()) * 2.0)
+                    )
+                }
             ),
             onAction = {}
         )
