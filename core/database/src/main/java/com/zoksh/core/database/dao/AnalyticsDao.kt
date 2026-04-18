@@ -2,6 +2,7 @@ package com.zoksh.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.zoksh.core.database.entity.RunEntity
 
 @Dao
 interface AnalyticsDao {
@@ -19,4 +20,7 @@ interface AnalyticsDao {
 
     @Query("SELECT AVG((durationMillis / 60000.0) / (distanceMeters / 1000.0)) FROM runentity")
     suspend fun getAvgPacePerRun(): Double
+
+    @Query("SELECT * FROM runentity ORDER BY dateTimeUtc DESC")
+    suspend fun getRunsForAnalytics(): List<RunEntity>
 }
