@@ -113,6 +113,7 @@ private fun AnalyticsDashboardScreen(
                 if (state.history.isNotEmpty()) {
                     ChartCard(
                         title = stringResource(id = R.string.avg_distance_over_time),
+                        subtitle = state.selectedDistanceDate,
                         chart = {
                             LineChart(
                                 dataPoints = state.history,
@@ -129,6 +130,7 @@ private fun AnalyticsDashboardScreen(
                     )
                     ChartCard(
                         title = stringResource(id = R.string.avg_pace_over_time),
+                        subtitle = state.selectedPaceDate,
                         chart = {
                             LineChart(
                                 dataPoints = state.history,
@@ -152,6 +154,7 @@ private fun AnalyticsDashboardScreen(
 @Composable
 private fun ChartCard(
     title: String,
+    subtitle: String,
     chart: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -177,7 +180,7 @@ private fun ChartCard(
             Icon(
                 imageVector = ArrowRightIcon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -191,7 +194,7 @@ private fun ChartCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Feb 2024",
+                text = subtitle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp
             )
@@ -216,6 +219,8 @@ private fun AnalyticsDashboardScreenRootScreenPreview() {
                 fastestEverRun = "25 km/h",
                 avgDistance = "6.6 km",
                 avgPace = "07:10",
+                selectedDistanceDate = "Mar 2024",
+                selectedPaceDate = "Mar 2024",
                 history = List(15) { i ->
                     AnalyticsHistoryPoint(
                         dateTimeUtc = ZonedDateTime.now().plusDays(i.toLong()),

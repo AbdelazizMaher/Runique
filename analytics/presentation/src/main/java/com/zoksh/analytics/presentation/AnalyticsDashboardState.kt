@@ -10,5 +10,7 @@ data class AnalyticsDashboardState(
     val avgPace: String = "",
     val history: List<AnalyticsHistoryPoint> = emptyList(),
     val selectedDistanceIndex: Int? = 5,
-    val selectedPaceIndex: Int? = 5
+    val selectedDistanceDate: String = "",
+    val selectedPaceIndex: Int? = 5,
+    val selectedPaceDate: String = ""
 )

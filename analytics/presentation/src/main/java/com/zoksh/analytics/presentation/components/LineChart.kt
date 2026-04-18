@@ -18,10 +18,14 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zoksh.analytics.domain.AnalyticsHistoryPoint
-import com.zoksh.com.core.presentation.designsystem.RuniqueGreen
+import com.zoksh.com.core.presentation.designsystem.Poppins
 import com.zoksh.com.core.presentation.designsystem.RuniqueWhite
 import kotlin.math.roundToInt
 
@@ -42,13 +46,20 @@ fun LineChart(
     val baselineColor = Color(0xFF333333)
     val gridLineColor = Color.White.copy(alpha = 0.15f)
     val highlightLineColor = Color.White.copy(alpha = 0.4f)
+
+    val resolver = LocalFontFamilyResolver.current
+    val typeface = resolver.resolve(
+        fontFamily = Poppins,
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Normal
+    ).value as android.graphics.Typeface
     
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(dataPoints) {
                 fun detect(offset: Offset) {
-                    val startPadding = 32.dp.toPx()
+                    val startPadding = 16.dp.toPx()
                     val step = (size.width - startPadding * 2) / (values.size - 1)
                     val index = ((offset.x - startPadding) / step).roundToInt().coerceIn(0, values.size - 1)
                     onPointClick(index)
@@ -57,7 +68,7 @@ fun LineChart(
             }
             .pointerInput(dataPoints) {
                 detectDragGestures { change, _ ->
-                    val startPadding = 32.dp.toPx()
+                    val startPadding = 16.dp.toPx()
                     val step = (size.width - startPadding * 2) / (values.size - 1)
                     val index = ((change.position.x - startPadding) / step).roundToInt().coerceIn(0, values.size - 1)
                     onPointClick(index)
@@ -67,7 +78,7 @@ fun LineChart(
         val width = size.width
         val height = size.height
         
-        val startPadding = 32.dp.toPx()
+        val startPadding = 16.dp.toPx()
         val bottomPadding = 22.dp.toPx()
         val topPadding = 60.dp.toPx()
         val chartHeight = height - topPadding - bottomPadding
@@ -89,6 +100,7 @@ fun LineChart(
 
         val textPaint = android.graphics.Paint().apply {
             color = android.graphics.Color.parseColor("#9E9E9E")
+            this.typeface = typeface
             textSize = 10.sp.toPx()
             textAlign = android.graphics.Paint.Align.CENTER
             isAntiAlias = true
@@ -98,7 +110,7 @@ fun LineChart(
         values.forEachIndexed { index, _ ->
             val x = getX(index)
             drawContext.canvas.nativeCanvas.drawText(
-                (index + 1).toString(), x, height - bottomPadding + 15.dp.toPx(), textPaint
+                (index + 1).toString(), x, height - bottomPadding + 18.dp.toPx(), textPaint
             )
 
             if (gridIndices.contains(index)) {
