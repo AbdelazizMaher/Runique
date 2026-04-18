@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zoksh.analytics.domain.AnalyticsRepository
+import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -15,13 +16,20 @@ class AnalyticsDashboardViewModel(
     var state by mutableStateOf(AnalyticsDashboardState())
         private set
 
+    private val dateFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
+
     init {
         viewModelScope.launch {
             val values = async { analyticsRepository.getAnalyticsValues() }
             val history = async { analyticsRepository.getAnalyticsHistory() }
             
-            state = values.await().toAnalyticsDashboardState().copy(
-                history = history.await()
+            val analyticsValues = values.await()
+            val historyPoints = history.await()
+
+            state = analyticsValues.toAnalyticsDashboardState().copy(
+                history = historyPoints,
+                selectedDistanceDate = historyPoints.getOrNull(state.selectedDistanceIndex ?: -1)?.dateTimeUtc?.format(dateFormatter) ?: "",
+                selectedPaceDate = historyPoints.getOrNull(state.selectedPaceIndex ?: -1)?.dateTimeUtc?.format(dateFormatter) ?: ""
             )
         }
     }
@@ -30,10 +38,18 @@ class AnalyticsDashboardViewModel(
         when (action) {
             AnalyticsAction.OnBackClicked -> Unit
             is AnalyticsAction.OnDistancePointSelected -> {
-                state = state.copy(selectedDistanceIndex = action.index)
+                val date = state.history.getOrNull(action.index ?: -1)?.dateTimeUtc?.format(dateFormatter) ?: ""
+                state = state.copy(
+                    selectedDistanceIndex = action.index,
+                    selectedDistanceDate = date
+                )
             }
             is AnalyticsAction.OnPacePointSelected -> {
-                state = state.copy(selectedPaceIndex = action.index)
+                val date = state.history.getOrNull(action.index ?: -1)?.dateTimeUtc?.format(dateFormatter) ?: ""
+                state = state.copy(
+                    selectedPaceIndex = action.index,
+                    selectedPaceDate = date
+                )
             }
         }
     }

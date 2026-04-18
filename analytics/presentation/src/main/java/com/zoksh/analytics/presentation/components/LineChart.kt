@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,14 +18,16 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zoksh.analytics.domain.AnalyticsHistoryPoint
-import com.zoksh.com.core.presentation.designsystem.RuniqueGreen
+import com.zoksh.com.core.presentation.designsystem.Poppins
 import com.zoksh.com.core.presentation.designsystem.RuniqueWhite
-import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 @Composable
 fun LineChart(
@@ -39,17 +42,24 @@ fun LineChart(
     val values = dataPoints.map { valueSelector(it).toFloat() }
     val maxValue = (values.maxOrNull() ?: 1f).coerceAtLeast(1f)
     
-    val neonGreen = RuniqueGreen
+    val neonGreen = MaterialTheme.colorScheme.primary
     val baselineColor = Color(0xFF333333)
     val gridLineColor = Color.White.copy(alpha = 0.15f)
     val highlightLineColor = Color.White.copy(alpha = 0.4f)
+
+    val resolver = LocalFontFamilyResolver.current
+    val typeface = resolver.resolve(
+        fontFamily = Poppins,
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Normal
+    ).value as android.graphics.Typeface
     
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(dataPoints) {
                 fun detect(offset: Offset) {
-                    val startPadding = 32.dp.toPx()
+                    val startPadding = 16.dp.toPx()
                     val step = (size.width - startPadding * 2) / (values.size - 1)
                     val index = ((offset.x - startPadding) / step).roundToInt().coerceIn(0, values.size - 1)
                     onPointClick(index)
@@ -58,7 +68,7 @@ fun LineChart(
             }
             .pointerInput(dataPoints) {
                 detectDragGestures { change, _ ->
-                    val startPadding = 32.dp.toPx()
+                    val startPadding = 16.dp.toPx()
                     val step = (size.width - startPadding * 2) / (values.size - 1)
                     val index = ((change.position.x - startPadding) / step).roundToInt().coerceIn(0, values.size - 1)
                     onPointClick(index)
@@ -68,9 +78,9 @@ fun LineChart(
         val width = size.width
         val height = size.height
         
-        val startPadding = 32.dp.toPx()
-        val bottomPadding = 55.dp.toPx()
-        val topPadding = 70.dp.toPx()
+        val startPadding = 16.dp.toPx()
+        val bottomPadding = 22.dp.toPx()
+        val topPadding = 60.dp.toPx()
         val chartHeight = height - topPadding - bottomPadding
         
         val step = (width - startPadding * 2) / (values.size - 1)
@@ -83,13 +93,14 @@ fun LineChart(
 
         drawLine(
             color = baselineColor,
-            start = Offset(0f, height - bottomPadding),
+            start = Offset(startPadding, height - bottomPadding),
             end = Offset(width, height - bottomPadding),
             strokeWidth = 1.2.dp.toPx()
         )
 
         val textPaint = android.graphics.Paint().apply {
             color = android.graphics.Color.parseColor("#9E9E9E")
+            this.typeface = typeface
             textSize = 10.sp.toPx()
             textAlign = android.graphics.Paint.Align.CENTER
             isAntiAlias = true
@@ -98,9 +109,18 @@ fun LineChart(
         val gridIndices = listOf(0, 4, 8, 12) 
         values.forEachIndexed { index, _ ->
             val x = getX(index)
-            drawContext.canvas.nativeCanvas.drawText((index + 1).toString(), x, height - 15.dp.toPx(), textPaint)
+            drawContext.canvas.nativeCanvas.drawText(
+                (index + 1).toString(), x, height - bottomPadding + 18.dp.toPx(), textPaint
+            )
+
             if (gridIndices.contains(index)) {
-                drawLine(gridLineColor, Offset(x, topPadding / 2), Offset(x, height - bottomPadding), 1.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f)))
+                drawLine(
+                    color = gridLineColor,
+                    start = Offset(x, topPadding / 2),
+                    end = Offset(x, height - bottomPadding),
+                    strokeWidth = 1.dp.toPx(),
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f))
+                )
             }
         }
 
@@ -115,8 +135,10 @@ fun LineChart(
             val pX = getX(i - 1); val pY = getY(values[i - 1])
             val cX = getX(i); val cY = getY(values[i])
             val mX = (pX + cX) / 2; val mY = (pY + cY) / 2
+            
             path.cubicTo(pX + (mX - pX) * 0.5f, pY + 8.dp.toPx(), mX - (mX - pX) * 0.5f, mY - 10.dp.toPx(), mX, mY)
             path.cubicTo(mX + (cX - mX) * 0.5f, mY + 10.dp.toPx(), cX - (cX - mX) * 0.5f, cY - 8.dp.toPx(), cX, cY)
+            
             fillPath.cubicTo(pX + (mX - pX) * 0.5f, pY + 8.dp.toPx(), mX - (mX - pX) * 0.5f, mY - 10.dp.toPx(), mX, mY)
             fillPath.cubicTo(mX + (cX - mX) * 0.5f, mY + 10.dp.toPx(), cX - (cX - mX) * 0.5f, cY - 8.dp.toPx(), cX, cY)
         }
@@ -129,12 +151,25 @@ fun LineChart(
         fillPath.lineTo(firstX, height - bottomPadding)
         fillPath.close()
 
-        drawPath(fillPath, brush = Brush.verticalGradient(colors = listOf(neonGreen.copy(alpha = 0.55f), neonGreen.copy(alpha = 0.15f), Color.Transparent), startY = topPadding, endY = height - bottomPadding))
-        drawPath(path, neonGreen, style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round))
+        drawPath(
+            path = fillPath,
+            brush = Brush.verticalGradient(
+                colors = listOf(neonGreen.copy(alpha = 0.55f), neonGreen.copy(alpha = 0.15f), Color.Transparent),
+                startY = topPadding,
+                endY = height - bottomPadding
+            )
+        )
+        drawPath(path = path, color = neonGreen, style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round))
 
         if (selectedPointIndex != null && selectedPointIndex in values.indices) {
             val selX = getX(selectedPointIndex); val selY = getY(values[selectedPointIndex])
-            drawLine(highlightLineColor, Offset(selX, selY + 12.dp.toPx()), Offset(selX, height - bottomPadding), 1.5.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 6f)))
+            drawLine(
+                color = highlightLineColor,
+                start = Offset(selX, selY + 12.dp.toPx()),
+                end = Offset(selX, height - bottomPadding),
+                strokeWidth = 1.5.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 6f))
+            )
             
             val txt = "${(values[selectedPointIndex] * 10).roundToInt() / 10.0} km"
             val paint = android.graphics.Paint().apply { color = android.graphics.Color.BLACK; textSize = 12.sp.toPx(); isFakeBoldText = true; textAlign = android.graphics.Paint.Align.CENTER }

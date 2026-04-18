@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,17 +29,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zoksh.analytics.domain.AnalyticsHistoryPoint
 import com.zoksh.analytics.presentation.components.AnalyticsCard
 import com.zoksh.analytics.presentation.components.LineChart
+import com.zoksh.com.core.presentation.designsystem.ArrowRightIcon
+import com.zoksh.com.core.presentation.designsystem.KeyboardArrowDownIcon
 import com.zoksh.com.core.presentation.designsystem.RuniqueTheme
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueScaffold
 import com.zoksh.com.core.presentation.designsystem.components.RuniqueToolbar
-import com.zoksh.com.core.presentation.designsystem.ArrowRightIcon
-import com.zoksh.com.core.presentation.designsystem.KeyboardArrowDownIcon
-import androidx.compose.material3.Icon
-import java.time.ZonedDateTime
-import com.zoksh.analytics.domain.AnalyticsHistoryPoint
 import org.koin.androidx.compose.koinViewModel
+import java.time.ZonedDateTime
 
 @Composable
 fun AnalyticsDashboardScreenRoot(
@@ -105,30 +105,15 @@ private fun AnalyticsDashboardScreen(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    AnalyticsCard(
-                        title = stringResource(id = R.string.fastest_ever_run),
-                        value = state.fastestEverRun,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    AnalyticsCard(
-                        title = stringResource(id = R.string.avg_distance_per_run),
-                        value = state.avgDistance,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
                 AnalyticsCard(
-                    title = stringResource(id = R.string.avg_pace_per_run),
-                    value = state.avgPace,
+                    title = stringResource(id = R.string.fastest_ever_run),
+                    value = state.fastestEverRun,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (state.history.isNotEmpty()) {
                     ChartCard(
                         title = stringResource(id = R.string.avg_distance_over_time),
+                        subtitle = state.selectedDistanceDate,
                         chart = {
                             LineChart(
                                 dataPoints = state.history,
@@ -145,6 +130,7 @@ private fun AnalyticsDashboardScreen(
                     )
                     ChartCard(
                         title = stringResource(id = R.string.avg_pace_over_time),
+                        subtitle = state.selectedPaceDate,
                         chart = {
                             LineChart(
                                 dataPoints = state.history,
@@ -168,6 +154,7 @@ private fun AnalyticsDashboardScreen(
 @Composable
 private fun ChartCard(
     title: String,
+    subtitle: String,
     chart: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -175,13 +162,13 @@ private fun ChartCard(
         modifier = modifier
             .clip(RoundedCornerShape(15.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .padding(vertical = 16.dp), // Removed horizontal padding here
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp), // Add horizontal padding back to header
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -193,24 +180,25 @@ private fun ChartCard(
             Icon(
                 imageVector = ArrowRightIcon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
-        
+
         chart()
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp), // Add horizontal padding back to footer
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Feb 2024",
+                text = subtitle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp
             )
+            Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = KeyboardArrowDownIcon,
                 contentDescription = null,
@@ -231,6 +219,8 @@ private fun AnalyticsDashboardScreenRootScreenPreview() {
                 fastestEverRun = "25 km/h",
                 avgDistance = "6.6 km",
                 avgPace = "07:10",
+                selectedDistanceDate = "Mar 2024",
+                selectedPaceDate = "Mar 2024",
                 history = List(15) { i ->
                     AnalyticsHistoryPoint(
                         dateTimeUtc = ZonedDateTime.now().plusDays(i.toLong()),
