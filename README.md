@@ -128,6 +128,14 @@ Located in `:core:presentation:designsystem`, the app features a fully custom th
 
 ---
 
+## 📸 Screenshots
+
+| Login Screen | Run Overview | Analytics Dashboard |
+| :---: | :---: | :---: |
+| <img src="screenshots/login.png" width="260" /> | <img src="screenshots/overview.png" width="260" /> | <img src="screenshots/analytics.png" width="260" /> |
+
+---
+
 ## 📥 Installation & Setup
 
 1.  Clone the repository: `git clone https://github.com/your-username/Runique.git`
