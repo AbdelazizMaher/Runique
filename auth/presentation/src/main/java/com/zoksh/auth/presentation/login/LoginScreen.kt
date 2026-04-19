@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
@@ -88,8 +90,7 @@ private fun LoginScreen(
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
                     .padding(vertical = 32.dp)
-                    .padding(top = 16.dp)
-                    .padding(bottom = 64.dp)
+                    .systemBarsPadding()
             ) {
                 LoginHeader()
                 Spacer(modifier = Modifier.height(48.dp))
@@ -129,6 +130,7 @@ private fun LoginScreen(
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
                     .padding(bottom = 32.dp)
             )
         }
