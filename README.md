@@ -130,9 +130,17 @@ Located in `:core:presentation:designsystem`, the app features a fully custom th
 
 ## 📸 Screenshots
 
+<!-- 
+TIP: To get GitHub-hosted URLs without adding images to your local project:
+1. Open a 'New Issue' in your GitHub repo.
+2. Drag and drop your screenshots into the comment box.
+3. Copy the generated URLs (e.g., https://github.com/user/repo/assets/...)
+4. Replace the 'PASTE_URL_HERE' placeholders below.
+-->
+
 | Login Screen | Run Overview | Analytics Dashboard |
 | :---: | :---: | :---: |
-| <img src="screenshots/login.png" width="260" /> | <img src="screenshots/overview.png" width="260" /> | <img src="screenshots/analytics.png" width="260" /> |
+| <img src="PASTE_LOGIN_URL_HERE" width="260" /> | <img src="PASTE_OVERVIEW_URL_HERE" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> |
 
 ---
 
