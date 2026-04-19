@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,69 +90,77 @@ private fun AnalyticsDashboardScreen(
                 CircularProgressIndicator()
             }
         } else {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .padding(16.dp),
+                contentPadding = paddingValues,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                item(key = "total_stats") {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        AnalyticsCard(
+                            title = stringResource(id = R.string.total_distance_run),
+                            value = state.totalDistanceRun,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        AnalyticsCard(
+                            title = stringResource(id = R.string.total_time_run),
+                            value = state.totalTimeRun,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+                item(key = "fastest_run") {
                     AnalyticsCard(
-                        title = stringResource(id = R.string.total_distance_run),
-                        value = state.totalDistanceRun,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    AnalyticsCard(
-                        title = stringResource(id = R.string.total_time_run),
-                        value = state.totalTimeRun,
-                        modifier = Modifier.weight(1f)
+                        title = stringResource(id = R.string.fastest_ever_run),
+                        value = state.fastestEverRun,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-                AnalyticsCard(
-                    title = stringResource(id = R.string.fastest_ever_run),
-                    value = state.fastestEverRun,
-                    modifier = Modifier.fillMaxWidth()
-                )
                 if (state.history.isNotEmpty()) {
-                    ChartCard(
-                        title = stringResource(id = R.string.avg_distance_over_time),
-                        subtitle = state.selectedDistanceDate,
-                        chart = {
-                            LineChart(
-                                dataPoints = state.history,
-                                valueSelector = { it.distanceMeters / 1000.0 },
-                                selectedPointIndex = state.selectedDistanceIndex,
-                                onPointClick = { index ->
-                                    onAction(AnalyticsAction.OnDistancePointSelected(index))
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(250.dp)
-                            )
-                        }
-                    )
-                    ChartCard(
-                        title = stringResource(id = R.string.avg_pace_over_time),
-                        subtitle = state.selectedPaceDate,
-                        chart = {
-                            LineChart(
-                                dataPoints = state.history,
-                                valueSelector = { it.paceMinPerKm },
-                                selectedPointIndex = state.selectedPaceIndex,
-                                onPointClick = { index ->
-                                    onAction(AnalyticsAction.OnPacePointSelected(index))
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(250.dp)
-                            )
-                        }
-                    )
+                    item(key = "distance_chart") {
+                        ChartCard(
+                            title = stringResource(id = R.string.avg_distance_over_time),
+                            subtitle = state.selectedDistanceDate,
+                            chart = {
+                                LineChart(
+                                    dataPoints = state.history,
+                                    valueSelector = { it.distanceMeters / 1000.0 },
+                                    selectedPointIndex = state.selectedDistanceIndex,
+                                    onPointClick = { index ->
+                                        onAction(AnalyticsAction.OnDistancePointSelected(index))
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(250.dp)
+                                )
+                            }
+                        )
+                    }
+                    item(key = "pace_chart") {
+                        ChartCard(
+                            title = stringResource(id = R.string.avg_pace_over_time),
+                            subtitle = state.selectedPaceDate,
+                            chart = {
+                                LineChart(
+                                    dataPoints = state.history,
+                                    valueSelector = { it.paceMinPerKm },
+                                    selectedPointIndex = state.selectedPaceIndex,
+                                    onPointClick = { index ->
+                                        onAction(AnalyticsAction.OnPacePointSelected(index))
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(250.dp)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
