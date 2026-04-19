@@ -26,7 +26,7 @@ fun Run.toCreateRunRequest(): CreateRunRequest {
     return CreateRunRequest(
         durationMillis = duration.inWholeMilliseconds,
         distanceMeters = distanceMeters,
-        epochMillis = dateTimeUtc.toInstant().toEpochMilli() * 1000L,
+        epochMillis = dateTimeUtc.toEpochSecond() * 1000L,
         lat = location.lat,
         long = location.lng,
         avgSpeedKmh = avgSpeedKmh,

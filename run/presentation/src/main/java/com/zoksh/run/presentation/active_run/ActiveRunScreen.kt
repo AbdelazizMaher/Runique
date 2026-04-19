@@ -235,7 +235,7 @@ private fun ActiveRunScreen(
             secondaryButton = {
                 RuniqueOutlinedActionButton(
                     text = stringResource(id = R.string.finish),
-                    isLoading = false,
+                    isLoading = state.isSavingRun,
                     onClick = {
                         onAction(ActiveRunAction.OnFinishRunClicked)
                     },
