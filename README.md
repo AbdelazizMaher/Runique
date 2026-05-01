@@ -21,23 +21,101 @@
 
 ---
 
-## 🏗 Architecture
+## 🏗 Modular Architecture & Engineering Design
 
-Runique follows **Clean Architecture** principles combined with **Unidirectional Data Flow (UDF)**. This ensures that the code is decoupled, testable, and maintainable.
+Runique is engineered with a **Layered Multi-Module Architecture**, which is the gold standard for large-scale, maintainable Android applications. This structure enforces a strict separation of concerns, improves build times through parallelization, and ensures high testability.
 
-### The 3 Layers:
-1.  **Domain:** Contains Pure Kotlin business logic, Models, and Repository interfaces. No Android dependencies.
-2.  **Data:** Implements Repositories, handling data fetching from Room (Local) and Ktor (Remote).
-3.  **Presentation:** Jetpack Compose UI, ViewModels, and State management using the MVI/MVVM pattern.
+### 🗺 High-Level Dependency Graph
+
+The project is split into vertical **Features** and horizontal **Core** infrastructure. Dependencies flow strictly inwards toward the **Domain** layers and downwards toward **Core** infrastructure, preventing circular dependencies and leaky abstractions.
 
 ```mermaid
-graph TD
-    UI[Presentation / UI] --> VM[ViewModel]
-    VM --> UC[Domain / Use Cases]
-    UC --> Repo[Data / Repository]
-    Repo --> Local[(Room Database)]
-    Repo --> Remote{Ktor API}
+graph TB
+    subgraph "App Layer (Orchestration)"
+        app[":app"]
+    end
+
+    subgraph "Feature Layers (Vertical Slices)"
+        direction TB
+        subgraph ":run"
+            run_p[":run:presentation"]
+            run_d[":run:data"]
+            run_m[":run:domain"]
+        end
+        subgraph ":auth"
+            auth_p[":auth:presentation"]
+            auth_d[":auth:data"]
+            auth_m[":auth:domain"]
+        end
+        subgraph ":analytics (Dynamic)"
+            ana_f[":analytics:analytics_feature"]
+            ana_p[":analytics:presentation"]
+            ana_d[":analytics:data"]
+            ana_m[":analytics:domain"]
+        end
+    end
+
+    subgraph "Core Layers (Horizontal Infrastructure)"
+        direction LR
+        c_ui[":core:presentation:ui"]
+        c_ds[":core:presentation:designsystem"]
+        c_data[":core:data"]
+        c_db[":core:database"]
+        c_net[":core:network"]
+        c_dom[":core:domain"]
+    end
+
+    %% App orchestration
+    app --> run_p & auth_p & ana_f
+    ana_f --> ana_p
+
+    %% Feature Internal & Core Dependencies
+    run_p & auth_p & ana_p --> c_ui
+    c_ui --> c_ds
+    
+    run_d & auth_d & ana_d --> c_data
+    c_data --> c_db & c_net
+    
+    run_m & auth_m & ana_m --> c_dom
+    c_data --> c_dom
+
+    %% Styling
+    style app fill:#f9f,stroke:#333,stroke-width:2px
+    style ana_f fill:#bbf,stroke:#333,stroke-dasharray: 5 5
 ```
+
+### 🧱 Architectural Principles
+
+1.  **Clean Architecture:** Strict separation between business logic (Domain), data handling (Data), and UI (Presentation).
+2.  **Feature Vertical Slicing:** Features like `Auth`, `Run`, and `Analytics` are self-contained vertical slices. They don't know about each other, making the codebase highly pluggable.
+3.  **Domain-Driven Design (DDD):** Every feature has a pure Kotlin `:domain` module with zero Android dependencies, enabling lightning-fast unit testing.
+4.  **Local Source of Truth:** The UI always observes the local database (`Room`), which is synchronized with the remote API (`Ktor`) in the background.
+
+### 🔄 Reactive Data Flow (UDF)
+
+Runique implements a strict **Unidirectional Data Flow** pattern. State is managed in ViewModels and exposed as reactive streams to the UI.
+
+```mermaid
+sequenceDiagram
+    participant UI as Compose UI
+    participant VM as ViewModel
+    participant UC as Use Case / Domain
+    participant Repo as Repository
+    participant DB as Room (Local)
+
+    UI->>VM: User Action (e.g., Start Run)
+    VM->>UC: Process Business Logic
+    UC->>Repo: Request Data Update
+    Repo->>DB: Update Local Storage
+    DB-->>Repo: Emit New State (Flow)
+    Repo-->>VM: Update UI State
+    VM-->>UI: Recompose Screen
+```
+
+### ⚖️ Dependency Rules
+*   **Strict Layering:** Presentation and Data modules can only interact with Domain modules. They are never allowed to depend on each other directly.
+*   **No Cross-Feature Dependencies:** Features are entirely decoupled. Shared functionality must be moved to a `:core` module.
+*   **Pure Kotlin Domain:** To ensure platform independence and test speed, domain modules must not contain any Android Framework dependencies.
 
 ---
 
@@ -138,9 +216,9 @@ TIP: To get GitHub-hosted URLs without adding images to your local project:
 4. Replace the 'PASTE_URL_HERE' placeholders below.
 -->
 
-| Login Screen | Run Overview | Analytics Dashboard |
-| :---: | :---: | :---: |
-| <img src="PASTE_LOGIN_URL_HERE" width="260" /> | <img src="PASTE_OVERVIEW_URL_HERE" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> |
+| Login Screen | Run Overview | Active Run | Analytics Dashboard |
+| :---: | :---: | :---: | :---: |
+| <img src="PASTE_LOGIN_URL_HERE" width="200" /> | <img src="PASTE_OVERVIEW_URL_HERE" width="200" /> | <img src="PASTE_ACTIVE_RUN_URL_HERE" width="200" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="200" /> |
 
 ---
 
