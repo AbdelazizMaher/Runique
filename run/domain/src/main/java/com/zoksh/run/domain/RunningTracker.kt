@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.zip
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -69,7 +70,7 @@ class RunningTracker(
                 if (isTracking) {
                     emit(location)
                 }
-            }.combine(_elapsedTime) { location, elapsedTime ->
+            }.zip(_elapsedTime) { location, elapsedTime ->
                 LocationTimestamp(
                     location = location,
                     durationTimestamp = elapsedTime
