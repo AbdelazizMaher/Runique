@@ -23,7 +23,8 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class RunningTracker(
-    private val locationObserver: LocationObserver, private val applicationScope: CoroutineScope
+    private val locationObserver: LocationObserver,
+    applicationScope: CoroutineScope
 ) {
     private val _runData = MutableStateFlow(RunData())
     val runData = _runData.asStateFlow()
@@ -70,7 +71,8 @@ class RunningTracker(
                 }
             }.combine(_elapsedTime) { location, elapsedTime ->
                 LocationTimestamp(
-                    location = location, durationTimestamp = elapsedTime
+                    location = location,
+                    durationTimestamp = elapsedTime
                 )
             }.onEach { location ->
                 val currentLocations = _runData.value.locations

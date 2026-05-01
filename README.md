@@ -216,9 +216,13 @@ TIP: To get GitHub-hosted URLs without adding images to your local project:
 4. Replace the 'PASTE_URL_HERE' placeholders below.
 -->
 
-| Splash Screen | Intro Screen | Login Screen | Register Screen | Run Overview(Empty) | Run Overview | Active Run | Analytics Dashboard |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/c00c176c-d338-439e-9866-42ec03c97114" width="200" /> | <img src="https://github.com/user-attachments/assets/b329c9f8-856c-4df8-b24d-ca8ae9b72cd3" width="200" /> | <img src="https://github.com/user-attachments/assets/393da88c-68b7-4bc1-be9f-feb20e187c3b" width="200" /> | <img src="https://github.com/user-attachments/assets/64cefe21-130f-4499-acc2-18a70f9a4c92" width="200" /> | <img src="https://github.com/user-attachments/assets/c39c1f08-25c9-4ccc-8e0b-5a24f08e1c29" width="200" /> | <img src="https://github.com/user-attachments/assets/98735cb8-43e5-4ce5-9502-e7e71859a0d3" width="200" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="200" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="200" /> |
+| Splash Screen | Intro Screen | Login Screen | Register Screen |
+| :---: | :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/c00c176c-d338-439e-9866-42ec03c97114" width="260" /> | <img src="https://github.com/user-attachments/assets/b329c9f8-856c-4df8-b24d-ca8ae9b72cd3" width="260" /> | <img src="https://github.com/user-attachments/assets/393da88c-68b7-4bc1-be9f-feb20e187c3b" width="260" /> | <img src="https://github.com/user-attachments/assets/64cefe21-130f-4499-acc2-18a70f9a4c92" width="260" /> |
+
+| Run Overview (Empty) | Run Overview | Active Run | Analytics Dashboard |
+| :---: | :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/c39c1f08-25c9-4ccc-8e0b-5a24f08e1c29" width="260" /> | <img src="https://github.com/user-attachments/assets/98735cb8-43e5-4ce5-9502-e7e71859a0d3" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> |
 
 ---
 
