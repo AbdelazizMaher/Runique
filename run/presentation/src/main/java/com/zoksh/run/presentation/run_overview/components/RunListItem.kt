@@ -59,7 +59,7 @@ import kotlin.time.Duration.Companion.seconds
 fun RunListItem(
     runUi: RunUi,
     modifier: Modifier = Modifier,
-    onDeleteClick: () -> Unit
+    onDeleteClicked: () -> Unit
 ) {
     var showDropDown by remember {
         mutableStateOf(false)
@@ -98,7 +98,7 @@ fun RunListItem(
             },
             onClick = {
                 showDropDown = false
-                onDeleteClick()
+                onDeleteClicked()
             }
         )
     }
@@ -302,7 +302,7 @@ private fun RunListItemPreview() {
                 totalElevationMeters = 123,
                 mapPictureUrl = null
             ).toRunUi(),
-            onDeleteClick = { }
+            onDeleteClicked = { }
         )
     }
 }

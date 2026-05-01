@@ -116,7 +116,7 @@ private fun RunOverviewScreen(
             ) {
                 RunListItem(
                     runUi = it,
-                    onDeleteClick = {
+                    onDeleteClicked = {
                         onAction(RunOverviewAction.OnDeleteClick(it))
                     },
                     modifier = Modifier.animateItem()

@@ -57,7 +57,7 @@ class KtorRemoteRunDataSource(
 
     override suspend fun deleteRun(id: String): EmptyResult<DataError.Network> {
         return client.delete(
-            route = "/runs",
+            route = "/run",
             queryParameters = mapOf(
                 "id" to id
             )
