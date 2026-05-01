@@ -216,9 +216,9 @@ TIP: To get GitHub-hosted URLs without adding images to your local project:
 4. Replace the 'PASTE_URL_HERE' placeholders below.
 -->
 
-| Login Screen | Run Overview | Active Run | Analytics Dashboard |
-| :---: | :---: | :---: | :---: |
-| <img src="PASTE_LOGIN_URL_HERE" width="200" /> | <img src="PASTE_OVERVIEW_URL_HERE" width="200" /> | <img src="PASTE_ACTIVE_RUN_URL_HERE" width="200" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="200" /> |
+| Splash Screen | Intro Screen | Login Screen | Run Overview | Active Run | Analytics Dashboard |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/c00c176c-d338-439e-9866-42ec03c97114" width="200" /> | <img src="https://github.com/user-attachments/assets/b329c9f8-856c-4df8-b24d-ca8ae9b72cd3" width="200" /> | <img src="PASTE_OVERVIEW_URL_HERE" width="200" /> | <img src="PASTE_ACTIVE_RUN_URL_HERE" width="200" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="200" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="200" /> |
 
 ---
 
