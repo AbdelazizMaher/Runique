@@ -222,7 +222,7 @@ TIP: To get GitHub-hosted URLs without adding images to your local project:
 
 | Run Overview (Empty) | Run Overview | Active Run | Analytics Dashboard |
 | :---: | :---: | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/c39c1f08-25c9-4ccc-8e0b-5a24f08e1c29" width="260" /> | <img src="https://github.com/user-attachments/assets/98735cb8-43e5-4ce5-9502-e7e71859a0d3" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> |
+| <img src="https://github.com/user-attachments/assets/c39c1f08-25c9-4ccc-8e0b-5a24f08e1c29" width="260" /> | <img src="https://github.com/user-attachments/assets/98735cb8-43e5-4ce5-9502-e7e71859a0d3" width="260" /> | <img src="https://github.com/user-attachments/assets/50e68988-db6f-4148-b383-670b2c2d1be2" width="260" /> | <img src="PASTE_ANALYTICS_URL_HERE" width="260" /> |
 
 ---
 
